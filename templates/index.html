@@ -29,7 +29,7 @@
       <center><b style="color:#ff4545">{a Name a}</b></center>
       </li>
       <li class="card" style="border-radius:2px;width:80%;margin-left:20px">
-          <input type="text" placeholder="search" style="width:80%;color:red;"/>
+          <input type="text" placeholder="search" style="width:80%;color:red;" ng-model="Value"/>
       </li>
       <li>
           <a>Edit Profile</a>
@@ -83,7 +83,7 @@
        <div class="left row hide-on-med-and-down">
         <form class="col s12">
           <div class="input-field col s12">
-            <input type="search" ng-model="Data.Value" class="field">
+            <input type="search" ng-model="Value" class="field">
             <label for="search-field"><i class="mdi-action-search"></i></label>
             <i class="mdi-navigation-close close"></i>
           </div>
@@ -102,7 +102,7 @@
         <img class="circle responsive-img col s6" src="{a SinglePost.get('By').get('ProfilePicture').url() a}" style="height:30%;width:74px"/>
 
           <span class="col s6">
-            <a href="#" style="color:red;float:left">{a SinglePost.get('By').get('Ninja_name') a}</a>
+            <a href="/Profile?id={a SinglePost.get('By').id a}" style="color:red;float:left">{a SinglePost.get('By').get('Ninja_name') a}</a>
           </span>
 
           <span style="float:right;color:grey" class="s10">
@@ -167,7 +167,7 @@
             <ul class="collection">
                 <li class="collection-item avatar" ng-repeat="comment in comments">
                   <img src="{a comment.get('User').get('ProfilePicture').url() a}" alt="" class="circle" style="">
-                  <span class="title"><a href=""><b style="color:#ff4545">{a comment.get('User').get('Ninja_name') a}</b></a></span>
+                  <span class="title"><a href="/Profile?id={a comment.get('User').id a}"><b style="color:#ff4545">{a comment.get('User').get('Ninja_name') a}</b></a></span>
                   <p class="commentText">{a comment.get("comment") a}<br>
                   </p>
                 </li>
@@ -283,7 +283,6 @@ $(function(){
     if (cPos == colors.length) {
         cPos = 0
     }
-    console.log('hey!!\n')
     window.setTimeout(function() { swapC() }, 500)
 }
         function punchit(){

@@ -1,6 +1,6 @@
 var app = angular.module('app.controllers',[]);
 
-app.controller('myCtrl',['$scope','$http',function($scope,$http) {
+app.controller('myCtrl',['$scope','$http','Model',function($scope,$http,Model) {
 	$scope.text = "ddd";
 	// $scope.Data = Data
 	Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
@@ -23,27 +23,58 @@ app.controller('myCtrl',['$scope','$http',function($scope,$http) {
 						// or server returns response with an error status.
 					});
 	};
-}])
+	$scope.$watch('Value',function(){
+			Model.Value = $scope.Value
+	},true)
+	}])
 
-app.controller('bodyCtrl',function($scope,$http,PostService) {
+app.controller('bodyCtrl',function($scope,$http,PostService,Model,Search) {
+	Parse.Cloud.run("GetFriendsDetail", {name:["Harshdeep Champaneri","Smit Thakkar"]},{
+		success : function(response)
+		{
+			for(var i=0;i<response.length;i++)
+			{
+				var singleUser = response[i];
+				console.log(singleUser.get("Ninja_name"))
+			}
+		},
+		error : function(error)
+		{
+			console.log("error" + error);
+		}
+	})
 	$scope.posts = new Array()
 	$scope.PostsVisibility = true
-	// $scope.Data = Data
-	$scope.$watch(function(scope) { return scope.Data.Value },
-              function() {console.log("changed = " + $scope.Data.Value);
-							if($scope.Data.Value != null && $scope.Data.Value != "" && $scope.Data.Value != String('undefined'))
-							GetPosts($scope.Data.Value)
-							}
-             );
-$scope.Posts = PostService.GetPosts(['0VDyVA8UTD']);
-console.log($scope.Posts);
- $scope.PostsVisibility = false;
-						//spinner
-						var spinner = document.getElementById('spinner')
-						spinner.style.display = 'none'
-						// LoadMore
-						var LoadMore = document.getElementById('LoadMore')
-						LoadMore.style.display = 'block'
+	$scope.$watch(function(){return Model.Value},function(){
+		if(Model.Value != null && Model.Value!='undefined'){
+		var SearchPromise = Search.SearchAccordingToKeyWord(Model.Value)
+		SearchPromise.then(function(SearchResults){
+			$scope.posts = SearchResults
+		})
+	}
+	else {
+		$scope.Posts = $scope.backup
+	}
+	},true)
+var spinner = document.getElementById('spinner')
+spinner.style.display = 'block'
+var LoadMore = document.getElementById('LoadMore')
+LoadMore.style.display = 'none'
+var promise = PostService.GetPosts([])
+promise.then(
+function(Data){
+	console.log(Data.length);
+
+	$scope.posts = Data
+	$scope.backup = $scope.posts
+	$scope.PostsVisibility = false;
+						 //spinner
+  var spinner = document.getElementById('spinner')
+	spinner.style.display = 'none'
+						 // LoadMore
+	var LoadMore = document.getElementById('LoadMore')
+	LoadMore.style.display = 'block'
+})
 
 	$scope.openComment = function(index) {
 		console.log("df");
@@ -59,123 +90,29 @@ console.log($scope.Posts);
 		// LoadMore
 		var LoadMore = document.getElementById('LoadMore')
 		LoadMore.style.display = 'none'
-		GetPosts()
+		var promise = PostService.GetPosts($scope.posts)
+		promise.then(function(Data){
+			console.log(Data)
+		  LoadMore = document.getElementById('LoadMore')
+			LoadMore.style.display = 'block'
+			spinner.style.display = "none"
+		})
 	}
-	var LoadMore = document.getElementById('LoadMore')
-	LoadMore.style.display = 'none'
-	Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
-	$http.get('/GetSessionToken')
-	.then(function(response) {
-		console.log(response.data);
-	Parse.User.become(response.data)
-	GetPosts()
-	})
-
 	$scope.Punch = function(index,which){
 			var current_user = Parse.User.current()
 			var objectId = $scope.posts[index].id;
-				if(which == 1)
-				{
-						var a = $scope.posts[index].get("Punchers1");
-						console.log(a);
-						if(a.indexOf(objectId) < 0)
-						{
-							Parse.Cloud.run("TapTap", {which:"1",userObjID:current_user.id,objectId:objectId}, {
-								success : function(result) {
-									if(result == "INC")
-									{
-										 $scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") + 1)
-										 a.push(current_user.id)
-										 a = uniq(a)
-										 $scope.posts[index].set("Punchers1",a)
-									}
-									else if(result == "Image 1 INC and Image 2 DEC")
-									{
-											$scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") + 1)
-											a.push(current_user.id)
-											a = uniq(a)
-											$scope.posts[index].set("Punchers1",a)
-											$scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") - 1)
-											var b = $scope.posts[index].get("Punchers2");
-											b.splice(b.indexOf(objectId))
-											b = uniq(b)
-											$scope.posts[index].set("Punchers2",b)
 
-									}
-
-										$scope.$apply()
-								},
-								error: function(error) {
-									console.log(JSON.stringify(error));
-								}
-							})
-						}
-
-				}
-				else
-				{
-					var a = $scope.posts[index].get("Punchers2");
-					if(a.indexOf(objectId) < 0)
-					{
-						Parse.Cloud.run("TapTap", {which:"2",userObjID:current_user.id,objectId:objectId}, {
-						success : function(result) {
-							if(result == "INC")
-							{
-								 $scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") + 1)
-								 a.push(current_user.id)
-								 a = uniq(a)
-								 $scope.posts[index].set("Punchers2",a)
-							}
-							else if(result == "Image 1 INC and Image 2 DEC")
-							{
-									$scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") + 1)
-									a.push(current_user.id)
-									a = uniq(a)
-									$scope.posts[index].set("Punchers2",a)
-									$scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") - 1)
-									var b = $scope.posts[index].get("Punchers1");
-									b.splice(b.indexOf(objectId))
-									b = uniq(b)
-									$scope.posts[index].set("Punchers1",b)
-							}
-								$scope.$apply()
+					Parse.Cloud.run("TapTap", {which:which,userObjID:current_user.id,objectId:objectId},{
+						success:function(response) {
+							console.log(JSON.stringify(response));
+							$scope.posts[index] = response
+							$scope.$apply()
 						},
-						error: function(error) {
-							console.error(error);
+						error : function(error) {
+							console.log(error);
 						}
 					})
-				 }
-				}
-	}
-
-function GetTimeStamp(createdAt)
-{
-	var currentDate = new Date()
-	var Time;
-	if(Math.abs(currentDate.getMonth() - createdAt.getMonth()) == 0)
-	{
-		if(Math.abs(currentDate.getDay() - createdAt.getDay()) > 7)
-		{
-			Time = String(parseInt(Math.abs(currentDate.getDay() - createdAt.getDay())) / 7 ) + "W"
 		}
-		else if (Math.abs(currentDate.getDay() - createdAt.getDay()) > 0)
-		{
-			Time = String(Math.abs(currentDate.getDay() - createdAt.getDay())) + "d"
-		}
-		else if (Math.abs(currentDate.getHours() - createdAt.getHours()) > 0){
-			Time = String(Math.abs(currentDate.getHours() - createdAt.getHours())) + "h"
-		}
-		else {
-		{
-					Time = String(Math.abs(currentDate.getMinutes() - createdAt.getMinutes())) + 'm'
-		}
-		}
-	}
-	else {
-		Time = String(Math.abs(currentDate.getMonth() - createdAt.getMonth())) + 'M'
-	}
-	return Time;
-}
 
 $scope.PostComment=function(){
 	var objectId = $scope.objectId
@@ -389,7 +326,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 			}})
 			$scope.isFollowing = "Unfollow"
 			$scope.icon = "remove"
-
+			$scope.Followers += 1
 		}
 		else {
 			FollowObject = new FollowType();
@@ -403,6 +340,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 
 			$scope.isFollowing = "Follow"
 			$scope.icon = "person_add"
+			$scope.Followers -= 1
 		}
 	}
 
@@ -492,79 +430,18 @@ app.controller('UserPunchesController',function($scope,$http,Data) {
 	$scope.Punch = function(index,which){
 			var current_user = Parse.User.current()
 			var objectId = $scope.posts[index].id;
-				if(which == 1)
-				{
-						var a = $scope.posts[index].get("Punchers1");
-						console.log(a);
-						if(a.indexOf(objectId) < 0)
-						{
-							Parse.Cloud.run("TapTap", {which:"1",userObjID:current_user.id,objectId:objectId}, {
-								success : function(result) {
-									if(result == "INC")
-									{
-										 $scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") + 1)
-										 a.push(current_user.id)
-										 a = uniq(a)
-										 $scope.posts[index].set("Punchers1",a)
-									}
-									else if(result == "Image 1 INC and Image 2 DEC")
-									{
-											$scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") + 1)
-											a.push(current_user.id)
-											a = uniq(a)
-											$scope.posts[index].set("Punchers1",a)
-											$scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") - 1)
-											var b = $scope.posts[index].get("Punchers2");
-											b.splice(b.indexOf(objectId))
-											b = uniq(b)
-											$scope.posts[index].set("Punchers2",b)
 
-									}
-
-										$scope.$apply()
-								},
-								error: function(error) {
-									console.log(JSON.stringify(error));
-								}
-							})
-						}
-
-				}
-				else
-				{
-					var a = $scope.posts[index].get("Punchers2");
-					if(a.indexOf(objectId) < 0)
-					{
-						Parse.Cloud.run("TapTap", {which:"2",userObjID:current_user.id,objectId:objectId}, {
-						success : function(result) {
-							if(result == "INC")
-							{
-								 $scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") + 1)
-								 a.push(current_user.id)
-								 a = uniq(a)
-								 $scope.posts[index].set("Punchers2",a)
-							}
-							else if(result == "Image 1 INC and Image 2 DEC")
-							{
-									$scope.posts[index].set("Votes2", $scope.posts[index].get("Votes2") + 1)
-									a.push(current_user.id)
-									a = uniq(a)
-									$scope.posts[index].set("Punchers2",a)
-									$scope.posts[index].set("Votes1", $scope.posts[index].get("Votes1") - 1)
-									var b = $scope.posts[index].get("Punchers1");
-									b.splice(b.indexOf(objectId))
-									b = uniq(b)
-									$scope.posts[index].set("Punchers1",b)
-							}
-								$scope.$apply()
+					Parse.Cloud.run("TapTap", {which:which,userObjID:current_user.id,objectId:objectId},{
+						success:function(response) {
+							console.log(JSON.stringify(response));
+							$scope.posts[index] = response
+							$scope.$apply()
 						},
-						error: function(error) {
-							console.error(error);
+						error : function(error) {
+							console.log(error);
 						}
 					})
-				 }
-				}
-	}
+		}
 
 function GetPosts(hashTag)
 {
@@ -725,19 +602,6 @@ function detectmob() {
     return false;
   }
 }
-})
-
-app.config(function($provide) {
-	$provide.provider('MathService', function() {
-      this.$get = function() {
-         var factory = {};
-
-         factory.multiply = function(a, b) {
-            return a * b;
-         }
-         return factory;
-      };
-   });
 })
 
 app.config(['$interpolateProvider', function($interpolateProvider) {
