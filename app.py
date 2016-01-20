@@ -9,12 +9,9 @@ from flask.ext.triangle import Form,Triangle
 from flask.ext.triangle.widgets.standard import TextInput
 
 settings_local.initParse()
-app = Flask(__name__,static_url_path='')
+app = Flask(__name__)
 Triangle(app)
-APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-app.config['UPLOAD_FOLDER'] = os.path.join(APP_ROOT, '/uploads/')
-
-
+app.config['UPLOAD_FOLDER'] = 'uploads/'
 
 @app.route('/',methods=['GET', 'POST'])
 def index():
@@ -30,43 +27,38 @@ def index():
 			return render_template('login.html',error="Invalid username or password")
 	elif request.method == 'POST' and request.form["what"]=='SignUp':
 		email = request.form["email"]
-
 		password = request.form["password"]
-
 		ninja = request.form["ninja"]
-
-		proPic = request.files["profilePic"]
 		birthdate = request.form["birthdate"]
-		print birthdate
 		u = User.signup(email,password)
 		u.email=email
 		u.save()
-		proPic.save(os.path.join(app.config['UPLOAD_FOLDER']),"userdp.png")
-		connection = httplib.HTTPSConnection('api.parse.com', 443)
-		connection.connect()
-		connection.request('POST', '/1/files/profilePic.png', open('userdp.png', 'rb').read(), {
-		"X-Parse-Application-Id": "${Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4}",
-		"X-Parse-REST-API-Key": "${nJOJNtVr1EvNiyjo6F6M8zfiUdzv8lPx31FBHiwO}",
-		"Content-Type": "image/png"
-		})
-		result = json.loads(connection.getresponse().read())
-		print result
-		connection.request('POST', '/1/classes/_User', json.dumps({
-		"username": email,
-		"picture": {
-		 "name": "profilePic.png",
-		 "__type": "File"
-		}
-		}), {
-		"X-Parse-Application-Id": "${Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4}",
-		"X-Parse-REST-API-Key": "${nJOJNtVr1EvNiyjo6F6M8zfiUdzv8lPx31FBHiwO}",
-		"Content-Type": "application/json"
-		})
-		result = json.loads(connection.getresponse().read())
-		print result
+		# proPic.save(os.path.join(app.config['UPLOAD_FOLDER']),"userdp.png")
+		# connection = httplib.HTTPSConnection('api.parse.com', 443)
+		# connection.connect()
+		# connection.request('POST', '/1/files/profilePic.png', open('userdp.png', 'rb').read(), {
+		# "X-Parse-Application-Id": "${Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4}",
+		# "X-Parse-REST-API-Key": "${nJOJNtVr1EvNiyjo6F6M8zfiUdzv8lPx31FBHiwO}",
+		# "Content-Type": "image/png"
+		# })
+		# result = json.loads(connection.getresponse().read())
+		# print result
+		# connection.request('POST', '/1/classes/_User', json.dumps({
+		# "username": email,
+		# "picture": {
+		#  "name": "profilePic.png",
+		#  "__type": "File"
+		# }
+		# }), {
+		# "X-Parse-Application-Id": "${Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4}",
+		# "X-Parse-REST-API-Key": "${nJOJNtVr1EvNiyjo6F6M8zfiUdzv8lPx31FBHiwO}",
+		# "Content-Type": "application/json"
+		# })
+		# result = json.loads(connection.getresponse().read())
+		# print result
 		session['session_token'] = u.sessionToken
 		resp = make_response(render_template("index.html"))
-		return resp
+		return u.sessionToken
 	else:
 		if session.get('session_token') is None:
 			print "nohhh"
@@ -100,10 +92,10 @@ def Icons(path):
 	print path
 	return send_from_directory('Icons', path)
 
-
 @app.route('/logout')
 def logout():
-	session["session_token"]=None
+	# session.Abandon()
+	session.clear()
 	return redirect(url_for('index'))
 
 def GetCurrentUser():

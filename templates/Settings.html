@@ -113,7 +113,7 @@
         <li class="collection-item" ng-repeat="d in Data"><div>{a d.Text a}<div href="#!" class="secondary-content">
           <div class="switch">
    <label>
-     <input type="checkbox" ng-checked="d.has">
+     <input type="checkbox" ng-checked="d.has" ng-click="change(d)">
      <span class="lever"></span>
    </label>
  </div>
@@ -122,6 +122,9 @@
     </li>
       </ul>
 </div>
+  <div ng-controller="FriendsController">
+
+  </div>
 </body>
 <script type="text/javascript">
 $(function(){
