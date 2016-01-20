@@ -46,7 +46,7 @@
     </div>
 
 
-    <form method="post" action="/">
+<form method="post" action="/">
       <div id="Login" class="col s12">
         <div class="col s12">
           <center style="color:red" class="animated infinite bounce">{{error}}</center>
@@ -135,7 +135,7 @@
               <br>
               <center>
               <div class="col s12 m4 l12">
-                    <a class="btn waves-effect waves-light" style="background-color:#3b5998;color:#fff;border-radius:2px;"><i class="fa fa-facebook-official"></i> &nbsp; Login With Facebook</a>
+                    <a class="btn waves-effect waves-light" style="background-color:#3b5998;color:#fff;border-radius:2px;" id="FacebookLoginBtn"><i class="fa fa-facebook-official"></i> &nbsp; Login With Facebook</a>
                   </div>
               </center>
   </div>
@@ -147,10 +147,30 @@
 
 
 
+<script>
+        Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
+        window.fbAsyncInit = function() {
+        Parse.FacebookUtils.init({ // this line replaces FB.init
+        appId      : '811805505603331', // Facebook App ID
+        status     : false,  // check Facebook Login status
+        cookie     : false,  // enable cookies to allow Parse to access the session
+        xfbml      : true,  // initialize Facebook social plugins on the page
+        version    : 'v2.5' // point to the latest Facebook Graph API version
+        });
+      };
 
+      (function(d, s, id){
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) {return;}
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+</script>
 <script type="text/javascript">
 
 $(function(){
+
   $('#register').click(function(){
     if($('#registerTarget').valid())
     {
@@ -171,6 +191,7 @@ $(function(){
                   console.log(fileUploadControl.files.length)
                   if (fileUploadControl.files.length > 0) {
                       var file = fileUploadControl.files[0];
+                      alert(JSON.stringify(file))
                       var name = "profilePic.png";
                       var parseFile = new Parse.File(name, file);
                       parseFile.save().then(function(){
@@ -200,10 +221,84 @@ $(function(){
             }
         });
       }
+    });
+    function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
+
+  $('#FacebookLoginBtn').click(function(){
+        alert('s')
+        Materialize.toast('Please Wait', 10000);
+        // Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
+        Parse.FacebookUtils.logIn(null, {
+          success: function(user) {
+          if (!user.existed()) {
+          alert("User signed up and logged in through Facebook!");
+          var sessionToken = user._sessionToken
+          console.log(sessionToken)
+          } else {
+          alert("User logged in through Facebook!");
+          var sessionToken = user.get("sessionToken")
+          var token = Parse.User.current().get('authData')['facebook'].access_token
+          FB.api('/me', 'get', { access_token: token, fields: 'id,name,gender,email,picture' }, function(response) {
+          var ProfilePicture = response['picture']['data'].url
+          console.log(ProfilePicture);
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', ProfilePicture, true);
+          xhr.responseType = 'arraybuffer';
+          xhr.onload = function(e) {
+          if (this.status == 200) {
+            // get binary data as a response
+            var blob = new Uint8Array(this.response);
+            blob = _arrayBufferToBase64(blob)
+            console.log(blob);
+            var image = new Image();
+            // image.src =
+            var file = blob;
+            console.log(blob);
+            var parseFile = new Parse.File("profilePic.png", {base64:blob});
+            parseFile.save().then(function(file){console.log("success")},function(error){console.log(error);})
+            user.set("ProfilePicture",parseFile);
+            var name = response.name
+            var gender = response.gender
+            var email = response.email
+            user.set("username",email);
+            user.set("Name",name);
+            user.set("email",email);
+            user.set("Gender",gender);
+            var Ninja_name = window.prompt("Enter Ninja_Name")
+            user.set("Ninja_name",Ninja_name)
+            user.save({
+              success : function(user){
+                    $.get('/setSession/'+user.get("sessionToken"),function(){
+                            location.reload();
+                    })
+              },
+              error : function(error){
+                console.log(error);
+              }
+            });
+          }
+          };
+          xhr.send()
+          });
+          console.log(token);
+          }
+          },
+          error: function(user, error) {
+          alert("User cancelled the Facebook login or did not fully authorize.");
+          }
+          });
+      })
 })
 
 
-})
 function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();

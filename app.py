@@ -104,6 +104,11 @@ def GetCurrentUser():
 	me = User.current_user()
 	return me
 
+@app.route('/setSession/<path:path>')
+def setSession(path):
+	session['session_token'] = path
+	return render_template('index.html')
+
 @app.route('/GetSessionToken')
 def GetSessionToken():
 	token = session.get('session_token')
