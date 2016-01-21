@@ -1,6 +1,7 @@
 Flask==0.10.1
 Flask-Triangle==0.5.4
 functools32==3.2.3.post2
+gunicorn==19.4.5
 itsdangerous==0.24
 Jinja2==2.8
 jsonschema==2.5.1
