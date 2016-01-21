@@ -135,7 +135,7 @@ def Settings():
 	return render_template('Settings.html')
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-app.run()
+app.run(host="0.0.0.0",debug=True,port=5000)
 
 
 # font images)
