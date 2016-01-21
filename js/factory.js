@@ -203,3 +203,111 @@ app.factory('FetchInterests',['$http','$q',function($http,$q){
     }
   }
 }])
+
+app.factory('GetFacebookFriends',['$http','$q',function($http,$q){
+  return{
+    GetFriends : function(){
+      var deferred = $q.defer()
+      var access_token = Parse.User.current().get('authData')['facebook']["access_token"]
+      console.log(access_token);
+      if(access_token != null)
+      {
+      $http.get('https://graph.facebook.com/me/friends?access_token=' + access_token).then(function(response){
+        var data = response.data.data
+        var namesArray = []
+        var Friends = []
+        for(var x=0;x<data.length;x++)
+        {
+          namesArray.push(data[x].name)
+        }
+        Parse.Cloud.run("GetFriendsDetail", {name:namesArray},{
+      		success : function(FriendObjects)
+      		{
+            var Data = []
+            var Query = new Parse.Query("FollowList")
+            Query.equalTo("Follower",Parse.User.current())
+            Query.find({success:function(Objects){
+              var objectIds = []
+              for(var j=0;j<Objects.length;j++)
+              {
+                objectIds.push(Objects[j].get("Following").id)
+              }
+              for(var i=0;i<FriendObjects.length;i++)
+              {
+                var singleFriend = FriendObjects[i];
+                console.log(singleFriend.id);
+                if(objectIds.indexOf(singleFriend.id) > -1)
+                {
+                  console.log("yahh");
+                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:true}
+                  Data.push(mydict)
+                }
+                else {
+                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:false}
+                  Data.push(mydict)
+                }
+              }
+              deferred.resolve(Data)
+            },error:function(Error){
+              console.log(Error);
+            }
+          })
+
+      		},
+      		error : function(error)
+      		{
+      			console.log("error" + error);
+      		}
+      	})
+      })
+      }
+      return deferred.promise
+    }
+  }
+}])
+// $http.get('/GetUserInterests').then(function(response) {
+app.factory('GetFriendsFromInterests',['$http','$q',function($http,$q){
+  return{
+    GetFriends : function(){
+      $http.get('/GetUserInterests').then(function(response) {
+        var Interests = response.data.result
+        // Interests = Interests.split(',')
+        var Query = new Parse.Query('UserIntrest');
+        Query.containedIn('IntrestText',Interests)
+        Query.find({
+          success:function(Objects){
+            var FobjectIds = [] 
+            for(var o in Objects)
+            {
+              console.log(Objects[o]);
+              var user = Objects[o].get("User")
+              user.fetch()
+              FobjectIds.push(user.id)
+            }
+            console.log(FobjectIds);
+            var Query = new Parse.Query("FollowList")
+            Query.equalTo("Follower",Parse.User.current())
+            Query.find({success:function(Objects){
+              var objectIds = []
+              for(var j=0;j<Objects.length;j++)
+              {
+                if(FobjectIds.indexOf(singleFriend.id) > -1)
+                {
+                  console.log("yahh");
+                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:true}
+                  Data.push(mydict)
+                }
+                else {
+                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:false}
+                  Data.push(mydict)
+                }
+              }
+          },
+          error : function(error){console.log(error);}
+        })
+      }
+    })
+  })
+}
+}
+}])

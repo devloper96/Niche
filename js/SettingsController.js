@@ -4,14 +4,24 @@ app.controller("MainController",function($scope){
 
 });
 
-app.controller("FriendsController",function($scope){
-  var accessToken = Parse.User.current().get('authData')
-  if(accessToken != null)
-  {
-      console.log(accessToken)
-  }
-
-})
+app.controller("FriendsController",['$scope','GetFacebookFriends','GetFriendsFromInterests',function($scope,GetFacebookFriends,GetFriendsFromInterests){
+  var promise = GetFacebookFriends.GetFriends()
+  promise.then(function(Data){
+    for(var i=0;i<Data.length;i++)
+    {
+      console.log(Data[i]);
+      if(Data[i].isFollowing)
+      {
+        Data[i].symbol = "remove"
+      }
+      else {
+        Data[i].symbol = "add"
+      }
+    }
+    $scope.FacebookFriends = Data
+  })
+  GetFriendsFromInterests.GetFriends()
+}])
 
 app.controller("InterestsController",['$scope','FetchInterests',function($scope,FetchInterests) {
   var promise = FetchInterests.Fetch()

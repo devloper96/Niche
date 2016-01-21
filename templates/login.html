@@ -202,7 +202,7 @@ $(function(){
                         user.save({
                           success: function(user){
                             console.log("Registered");
-                            location.reload();
+                            window.location="/Select_Interests"
                           },
                           error : function(error){
                             Materialize.toast(error, 2000);
@@ -238,12 +238,13 @@ $(function(){
         // Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
         Parse.FacebookUtils.logIn(null, {
           success: function(user) {
-          if (!user.existed()) {
-          alert("User signed up and logged in through Facebook!");
+          if (user.existed()) {
           var sessionToken = user._sessionToken
-          console.log(sessionToken)
+          $.get('/setSession/'+user.get("sessionToken"),function(){
+                  location.reload()
+          })
           } else {
-          alert("User logged in through Facebook!");
+          // alert("User logged in through Facebook!");
           var sessionToken = user.get("sessionToken")
           var token = Parse.User.current().get('authData')['facebook'].access_token
           FB.api('/me', 'get', { access_token: token, fields: 'id,name,gender,email,picture' }, function(response) {
@@ -277,7 +278,7 @@ $(function(){
             user.save({
               success : function(user){
                     $.get('/setSession/'+user.get("sessionToken"),function(){
-                            location.reload();
+                            window.location="/Select_Interests"
                     })
               },
               error : function(error){

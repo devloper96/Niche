@@ -126,6 +126,10 @@ def GetUserInterests():
 def Profile():
 	return render_template('profile.html')
 
+@app.route('/Select_Interests')
+def Select_Interests():
+	return render_template('Settings.html')
+
 @app.route('/Settings')
 def Settings():
 	return render_template('Settings.html')
