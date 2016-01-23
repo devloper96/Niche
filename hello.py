@@ -9,7 +9,7 @@ from flask.ext.triangle import Form,Triangle
 from flask.ext.triangle.widgets.standard import TextInput
 from datetime import timedelta
 from flask import session, app
-import os 
+import os
 
 settings_local.initParse()
 app = Flask(__name__)
@@ -132,11 +132,17 @@ def GetUserInterests():
 
 @app.route('/Profile')
 def Profile():
-	return render_template('profile.html')
+    if session.get('session_token') != None:
+        return render_template('profile.html')
+    else:
+        return render_template('login.html')
 
 @app.route('/Select_Interests')
 def Select_Interests():
-	return render_template('Settings.html')
+    if session.get('session_token') != None:
+        return render_template('Settings.html')
+    else:
+        return render_template('login.html')
 
 @app.route('/Settings')
 def Settings():
