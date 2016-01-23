@@ -10,8 +10,6 @@ from flask.ext.triangle.widgets.standard import TextInput
 from datetime import timedelta
 from flask import session, app
 import os 
-from pml import app
-
 
 settings_local.initParse()
 app = Flask(__name__)
