@@ -464,6 +464,7 @@ app.controller('UserPunchesController',function($scope,$http,Data) {
 	 else {
 	    return false;
 	  }
+
 	}
 
 	if(detectmob())
