@@ -288,11 +288,11 @@ app.controller('DetailsController',function($scope,$http,Data) {
 	if(!detectmob())
 	{
 		$scope.width = "100%";
-		$scope.blur_img = "width:90%;margin-left:6%;margin-top:-10px; height:440px";
+		$scope.blur_img = "width:90%;margin-left:6%;margin-top:-10px; height:480px";
 		$scope.dp = "width:15%";
 		$scope.follow_div = "right:170px;height:30px; width:100px;margin-top:-110px;float:right";
 
-		$scope.ffp_full = "width:90%;margin-left:10%;margin-top:3%;";
+		$scope.ffp_full = "width:90%;margin-left:6%;margin-top:2%;";
 		$scope.follower = "width:50px; height:10px; padding-top:2px";
 		$scope.divider1 = "width:2px;margin-top:10px; height:70px";
 		$scope.following = "null";

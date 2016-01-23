@@ -230,29 +230,22 @@ $(document).ready(function(){
 	<div class="row" style="color:#fff">
 		<!--<div class="section card col s10 m10" style="width:90%;margin-left:7%; margin-top:50px;">-->
 			<center>
-				<img class="circle responsive-img" src="{a ProfilePicture a}" style="{a dp a} ;z-index:10px; border:1px solid red; border-radius:50%;"/></br/>
+				<img class="circle responsive-img" src="{a ProfilePicture a}" style="height:200px;width:200px;border:red solid 1px"/></br/>
 				<span class="title">
-					<a href>
-						<b style="color:#fff;"><h3>{a Name a}</h3></b>
-					</a>
+					<b style="color:#fff;"><h3>{a Name a}</h3></b>
 				</span>
 				<span class="title">
-					<a href>
 						<b style="color:#fff;"><h5>{a Ninja_name a}</h5></b>
-					</a>
 				</span>
 			</center>
 		<!--</div>-->
 	</div>
-	<a>
-	<div class="" style="{a follow_div a} ;position:relative;background-color:rgba(255,255,255,0);border:2px solid #fff;border-radius:5px;">
-		<center>
-		<a href="#" class=""  id="Follow" ng-click="FollowUnfollowAction()" style="margin-top:auto;color:#fff;">
-			<b>+Follow</b>
-		</a>
+	<center>
+	<a class=""  id="Follow" ng-click="FollowUnfollowAction()" style="margin-top:auto;color:#fff;border : solid 1px;border-radius: 5px;padding-right: 24px;border-width:medium;padding-left: 24px;padding-top: 2px;padding-bottom: 2px;">
+	<b>+Follow</b>
+	</a>
 	</center>
-	</div>
-</a>
+
 </div>
 	<div class="row" style="background-color:rgba(255,255,255,0); color:#000; {a ffp_full a} ;">
 		<div class="col s12">
@@ -575,7 +568,7 @@ $(document).ready(function(){
 
 		$('.bg_foggy').foggy(true);
 		$('.bg_foggy').foggy({
- blurRadius: 15,          // In pixels.
+ blurRadius: 18,          // In pixels.
  opacity: 0.7,           // Falls back to a filter for IE.
  cssFilterSupport: true  // Use "-webkit-filter" where available.
 });
