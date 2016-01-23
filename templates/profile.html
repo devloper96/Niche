@@ -230,47 +230,49 @@ $(document).ready(function(){
 	<div class="row" style="color:#fff">
 		<!--<div class="section card col s10 m10" style="width:90%;margin-left:7%; margin-top:50px;">-->
 			<center>
-				<img class="circle responsive-img" src="{a ProfilePicture a}" style="height:200px;width:200px;border:red solid 1px"/></br/>
+				<img class="circle responsive-img" src="{a ProfilePicture a}" style="height:200px;width:200px;border:{a color a} solid 1px"/></br/>
 				<span class="title">
-					<b style="color:#fff;"><h3>{a Name a}</h3></b>
+					<b style="color:{a color a};"><h3>{a Name a}</h3></b>
 				</span>
 				<span class="title">
-						<b style="color:#fff;"><h5>{a Ninja_name a}</h5></b>
+						<b style="color:{a color a};"><h5>{a Ninja_name a}</h5></b>
 				</span>
 			</center>
 		<!--</div>-->
 	</div>
 	<center>
-	<a class=""  id="Follow" ng-click="FollowUnfollowAction()" style="margin-top:auto;color:#fff;border : solid 1px;border-radius: 5px;padding-right: 24px;border-width:medium;padding-left: 24px;padding-top: 2px;padding-bottom: 2px;">
-	<b>+Follow</b>
+	<a class="" id="Follow" ng-click="FollowUnfollowAction()" style="margin-top:auto;display:{a display a};color:{a color a};border : solid 1px;border-radius: 5px;padding-right: 24px;border-width:medium;padding-left: 24px;padding-top: 2px;padding-bottom: 2px;width:120px">
+	<b>{a icon a}</b>
 	</a>
 	</center>
 
 </div>
-	<div class="row" style="background-color:rgba(255,255,255,0); color:#000; {a ffp_full a} ;">
-		<div class="col s12">
-			<div class="col s4" style="float:left;color:#fff;">
-				<center>
-					<p class="center">Followers</p>
-					<p class="center" style="{a follower a} ;"><b>{a Followers a}</b></p>
-				</center>
-			</div>
-			<div class="col s1" style="{a divider1 a} ;border-left:3px solid #fff; border-radius:5px; float:left;"></div>
-			<div class="col s3" style="float:left;color:#fff;">
-				<center>
-					<p class="center">Following</p>
-					<p class="center" style="{a following a}"><b>{a Following a}</b></p>
-				</center>
-			</div>
-			<div class="col s1" style="{a divider2 a} ;border-left:3px solid #fff; border-radius:5px; float:left;"></div>
-			<div class="col s3" style="float:left;color:#fff;">
-				<center>
-					<p class="center">Posts</p>
-					<p class="center" style=""><b>{a Data.Value a}</b></p>
-				</center>
+	<center>
+		<div class="row" style="background-color:rgba(255,255,255,0); color:#000; {a ffp_full a} ;">
+			<div class="col s12">
+				<div class="col s4" style="float:left;color:{a color a};">
+					<center>
+						<p class="center">Followers</p>
+						<p class="center" style="{a follower a} ;"><b>{a Followers a}</b></p>
+					</center>
+				</div>
+				<div class="col s1" style="{a divider1 a} ;border-left:3px solid {a color a}; border-radius:5px; float:left;"></div>
+				<div class="col s3" style="float:left;color:{a color a}">
+					<center>
+						<p class="center">Following</p>
+						<p class="center" style="{a following a}"><b>{a Following a}</b></p>
+					</center>
+				</div>
+				<div class="col s1" style="{a divider2 a} ;border-left:3px solid {a color a}; border-radius:5px; float:left;"></div>
+				<div class="col s3" style="float:left;color:{a color a}">
+					<center>
+						<p class="center">Posts</p>
+						<p class="center" style=""><b>{a Data.Value a}</b></p>
+					</center>
+				</div>
 			</div>
 		</div>
-	</div>
+	</center>
 </div>
 	<!-- end J code -->
 <!--	<div class="row" style="color:#ee6e73;">
@@ -312,15 +314,15 @@ $(document).ready(function(){
 	</div>	-->
 	</div>
 </div>
-	<div class="row" ng-controller="UserPunchesController" style="border:1px solid #000;">
+	<div class="row" ng-controller="UserPunchesController">
 		<div class="col l12 s12">
 	<!--<div id="fullpage">-->
-	     <div class="section card col l8 s12 center" style="border:1px solid #000;width:{a width a};" id="main_card" ng-repeat="SinglePost in posts" ng-hide="{a PostsVisibility a}">
+	     <div class="section card col l8 s12 center" style="width:{a width a};margin-left:{a pcmargin a}" id="main_card" ng-repeat="SinglePost in posts" ng-hide="{a PostsVisibility a}">
 	      <div class="card-content content">
 	        <div class="row">
 	            <div class="col s12">
 	       <center class="row">
-	        <img class="circle responsive-img col s6" src="{a SinglePost.get('By').get('ProfilePicture').url() a}" style="height:30%;width:74px"/>
+	        <img class="circle responsive-img col s6" src="{a SinglePost.get('By').get('ProfilePicture').url() a}" style="height:50px;width:74px"/>
 
 	          <span class="col s6" style="margin-top:15px;">
 	            <a href="/Profile?id={a SinglePost.get('By').id a}" style="color:red;float:left">{a SinglePost.get('By').get('Ninja_name') a}</a>
@@ -386,9 +388,6 @@ $(document).ready(function(){
 	          <center>
 	              <img src="images/spinner.gif"/>
 	          </center>
-	        </div>
-	        <div class="col l12" id="LoadMore">
-	        <center><a ng-click="LoadMore()"><img src="images/LoadMore.png" style="height:100px"/></a><center>
 	        </div>
 	        <div id="modal1" class="modal modal-fixed-footer" style="overflow:hidden">
 	          <div class="modal-content">

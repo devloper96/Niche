@@ -291,7 +291,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 		$scope.blur_img = "width:90%;margin-left:6%;margin-top:-10px; height:480px";
 		$scope.dp = "width:15%";
 		$scope.follow_div = "right:170px;height:30px; width:100px;margin-top:-110px;float:right";
-
+		$scope.color = "red"
 		$scope.ffp_full = "width:90%;margin-left:6%;margin-top:2%;";
 		$scope.follower = "width:50px; height:10px; padding-top:2px";
 		$scope.divider1 = "width:2px;margin-top:10px; height:70px";
@@ -301,10 +301,10 @@ app.controller('DetailsController',function($scope,$http,Data) {
 	}
 	else {
 		$scope.width="70%"
-		$scope.blur_img = "width:100%;margin-left:6%;margin-top:-10px; height:500px";
+		$scope.blur_img = "width:100%;margin-left:6%;margin-top:-10px; height:480px";
 		$scope.dp = "width:20%";
 		$scope.follow_div = "margin-left:35%;height:30px;float:left;";
-
+		$scope.color = "red"
 		$scope.ffp_full = "width:100%;margin-left:5%;";
 		$scope.follower = "";
 		$scope.divider1 = "width:2px;margin-top:10px; height:70px;";
@@ -332,7 +332,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 	$scope.Ninja_name = Parse.User.current().get("Ninja_name")
 	$scope.ProfilePicture = Parse.User.current().get("ProfilePicture").url()
 	var Follow = document.getElementById('Follow')
-	Follow.style.display = 'none'
+	$scope.display = 'none'
 	}
 	else {
 		User = new Parse.User();
@@ -346,6 +346,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 			}
 		})
 		CheckIfIamFollowing()
+		$scope.display = 'block'
 	}
 
 	$scope.isFollowing = "Please wait .."
@@ -393,7 +394,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 				$scope.objectIdOfFollowObject = Object.id
 			}})
 			$scope.isFollowing = "Unfollow"
-			$scope.icon = "remove"
+			$scope.icon = "Follwing"
 			$scope.Followers += 1
 		}
 		else {
@@ -407,7 +408,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 			})
 
 			$scope.isFollowing = "Follow"
-			$scope.icon = "person_add"
+			$scope.icon = "+Follow"
 			$scope.Followers -= 1
 		}
 	}
@@ -433,12 +434,12 @@ function CheckIfIamFollowing()
 				{
 					console.log("Yahh is Following");
 					$scope.isFollowing = "UnFollow";
-					$scope.icon = "remove"
+					$scope.icon = "-UnFollow"
 					$scope.objectIdOfFollowObject = Following[i].id;
 				}
 				else {
 					$scope.isFollowing = "Follow"
-					$scope.icon = "person_add"
+					$scope.icon = "+Follow"
 				}
 			}
 		}
@@ -471,6 +472,7 @@ app.controller('UserPunchesController',function($scope,$http,Data) {
 	}
 	else {
 		$scope.width="70%"
+		$scope.pcmargin = "16%"
 	}
 
 
