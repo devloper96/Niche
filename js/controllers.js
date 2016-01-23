@@ -301,7 +301,7 @@ app.controller('DetailsController',function($scope,$http,Data) {
 	}
 	else {
 		$scope.width="70%"
-		$scope.blur_img = "width:100%;margin-left:6%;margin-top:-10px; height:400px";
+		$scope.blur_img = "width:100%;margin-left:6%;margin-top:-10px; height:480px";
 		$scope.dp = "width:20%";
 		$scope.follow_div = "margin-left:35%;height:30px;float:left;";
 
