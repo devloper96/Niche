@@ -9,6 +9,8 @@ from flask.ext.triangle import Form,Triangle
 from flask.ext.triangle.widgets.standard import TextInput
 from datetime import timedelta
 from flask import session, app
+import os 
+from pml import app
 
 
 settings_local.initParse()
@@ -142,8 +144,10 @@ def Select_Interests():
 def Settings():
 	return render_template('Settings.html')
 
+
+port = int(os.environ.get('PORT', 5000))
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-app.run(host="0.0.0.0",debug=True,port=5000)
+app.run(host="0.0.0.0",debug=True,port=port)
 
 
 # font images)
