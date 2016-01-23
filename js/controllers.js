@@ -423,7 +423,7 @@ function CheckIfIamFollowing()
 			if(Following.length == 0)
 			{
 				$scope.isFollowing = "Follow"
-				$scope.icon = "person_add"
+				$scope.icon = "+Follow"
 			}
 			for(var i=0;i<Following.length;i++)
 			{
