@@ -7,15 +7,23 @@ import json,httplib
 import os
 from flask.ext.triangle import Form,Triangle
 from flask.ext.triangle.widgets.standard import TextInput
+from datetime import timedelta
+from flask import session, app
+
 
 settings_local.initParse()
 app = Flask(__name__)
 Triangle(app)
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=46440)
+
 @app.route('/',methods=['GET', 'POST'])
 def index():
-	settings_local.initParse()
+ 	settings_local.initParse()
 	if request.method == 'POST' and request.form["what"]== 'Login':
 		try:
 			print request.form["password"]

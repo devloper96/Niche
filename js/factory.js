@@ -181,11 +181,13 @@ app.factory('FetchInterests',['$http','$q',function($http,$q){
                           {
                               console.log("-------------------------True------------------------")
                               mydata.has = true;
+                              mydata.leverColor = "#ff4545"
                               break;
                           }
                           else
                           {
                             mydata.has = false
+                            mydata.leverColor = ""
                           }
               }
             console.log(mydata)
@@ -276,7 +278,7 @@ app.factory('GetFriendsFromInterests',['$http','$q',function($http,$q){
         Query.containedIn('IntrestText',Interests)
         Query.find({
           success:function(Objects){
-            var FobjectIds = [] 
+            var FobjectIds = []
             for(var o in Objects)
             {
               console.log(Objects[o]);

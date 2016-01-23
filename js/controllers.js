@@ -29,6 +29,31 @@ app.controller('myCtrl',['$scope','$http','Model',function($scope,$http,Model) {
 	}])
 
 app.controller('bodyCtrl',function($scope,$http,PostService,Model,Search) {
+
+	function detectmob() {
+	 if( navigator.userAgent.match(/Android/i)
+	 || navigator.userAgent.match(/webOS/i)
+	 || navigator.userAgent.match(/iPhone/i)
+	 || navigator.userAgent.match(/iPad/i)
+	 || navigator.userAgent.match(/iPod/i)
+	 || navigator.userAgent.match(/BlackBerry/i)
+	 || navigator.userAgent.match(/Windows Phone/i)
+	 ){
+	    return true;
+	  }
+	 else {
+	    return false;
+	  }
+	}
+
+	if(detectmob())
+	{
+		$scope.width = "100%";
+	}
+	else {
+		$scope.width="70%"
+	}
+
 	Parse.Cloud.run("GetFriendsDetail", {name:["Harshdeep Champaneri","Smit Thakkar"]},{
 		success : function(response)
 		{
@@ -244,6 +269,50 @@ function uniq(a) {
 
 app.controller('DetailsController',function($scope,$http,Data) {
 
+	function detectmob() {
+	 if( navigator.userAgent.match(/Android/i)
+	 || navigator.userAgent.match(/webOS/i)
+	 || navigator.userAgent.match(/iPhone/i)
+	 || navigator.userAgent.match(/iPad/i)
+	 || navigator.userAgent.match(/iPod/i)
+	 || navigator.userAgent.match(/BlackBerry/i)
+	 || navigator.userAgent.match(/Windows Phone/i)
+ ){
+			return true;
+		}
+	 else {
+			return false;
+		}
+	}
+
+	if(!detectmob())
+	{
+		$scope.width = "100%";
+		$scope.blur_img = "width:90%;margin-left:6%;margin-top:-10px; height:440px";
+		$scope.dp = "width:15%";
+		$scope.follow_div = "right:170px;height:30px; width:100px;margin-top:-110px;float:right";
+
+		$scope.ffp_full = "width:90%;margin-left:10%;margin-top:3%;";
+		$scope.follower = "width:50px; height:10px; padding-top:2px";
+		$scope.divider1 = "width:2px;margin-top:10px; height:70px";
+		$scope.following = "null";
+		$scope.divider2 = "width:2px;margin-top:10px; height:70px";
+
+	}
+	else {
+		$scope.width="70%"
+		$scope.blur_img = "width:100%;margin-left:6%;margin-top:-10px; height:400px";
+		$scope.dp = "width:20%";
+		$scope.follow_div = "margin-left:35%;height:30px;float:left;";
+
+		$scope.ffp_full = "width:100%;margin-left:5%;";
+		$scope.follower = "";
+		$scope.divider1 = "width:2px;margin-top:10px; height:70px;";
+		$scope.following = "";
+		$scope.divider2 = "width:2px;margin-top:10px; height:70px;";
+	}
+
+
 	var params = {};
 	var User = null;
 	if (location.search) {
@@ -256,7 +325,6 @@ app.controller('DetailsController',function($scope,$http,Data) {
 			}
 	}
 	var objectId = params.id
-	alert(objectId)
 	if(objectId == Parse.User.current().id || objectId == null)
 	{
 	User = Parse.User.current()
@@ -380,6 +448,32 @@ function CheckIfIamFollowing()
 })
 
 app.controller('UserPunchesController',function($scope,$http,Data) {
+
+	function detectmob() {
+	 if( navigator.userAgent.match(/Android/i)
+	 || navigator.userAgent.match(/webOS/i)
+	 || navigator.userAgent.match(/iPhone/i)
+	 || navigator.userAgent.match(/iPad/i)
+	 || navigator.userAgent.match(/iPod/i)
+	 || navigator.userAgent.match(/BlackBerry/i)
+	 || navigator.userAgent.match(/Windows Phone/i)
+	 ){
+	    return true;
+	  }
+	 else {
+	    return false;
+	  }
+	}
+
+	if(detectmob())
+	{
+		$scope.width = "100%";
+	}
+	else {
+		$scope.width="70%"
+	}
+
+
 	var params = {};
 	var User = null
 	if (location.search) {
@@ -395,7 +489,6 @@ app.controller('UserPunchesController',function($scope,$http,Data) {
 	if(objectId == Parse.User.current() || objectId == null)
 	{
 		User = Parse.User.current();
-		alert(User.id)
 	}
 	else {
 		User = new Parse.User();

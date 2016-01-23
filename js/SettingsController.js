@@ -30,8 +30,10 @@ app.controller("InterestsController",['$scope','FetchInterests',function($scope,
   });
   $scope.change = function(d){
     var InterestProto = Parse.Object.extend("UserIntrest")
+
     if(!d.has)
     {
+      $scope.leverColor = "red"
       var InterestObject = new InterestProto();
       InterestObject.set("User",Parse.User.current())
       var InterestList = Parse.Object.extend("Intrestlist")
@@ -40,6 +42,7 @@ app.controller("InterestsController",['$scope','FetchInterests',function($scope,
       InterestObject.set("HisInterest",InterestListObject);
       InterestObject.set("IntrestText",d.Text)
       d.has = true
+      d.leverColor = "red"
       InterestObject.save({
         success:function(Object){console.log("Added");},
         error:function(){console.log("Error occured");}
@@ -48,6 +51,7 @@ app.controller("InterestsController",['$scope','FetchInterests',function($scope,
     else {
       d.has = false
       var Query = new Parse.Query(InterestProto)
+      d.leverColor = ""
       Query.equalTo("User",Parse.User.current())
       Query.find({
         success:function(response){
