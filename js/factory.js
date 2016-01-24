@@ -327,16 +327,3 @@ app.factory('GetFriendsFromInterests',['$http','$q',function($http,$q){
 }
 }
 }])
-function removeDuplicates(Data)
-{
-var arr = new Array();
-for ( var i=0, len=Data.length; i < len; i++ )
-{
-    arr[Data[i]] = Data[i];
-}
-Data = new Array();
-for ( var key in arr ){
-    Data.push(arr[key]);
- }
-return Data
-}
