@@ -179,7 +179,6 @@ app.factory('FetchInterests',['$http','$q',function($http,$q){
             {
                           if(response.data.result[j] == Intersts[i].get("IntrestText"))
                           {
-                              console.log("-------------------------True------------------------")
                               mydata.has = true;
                               mydata.leverColor = "#ff4545"
                               break;
@@ -190,7 +189,6 @@ app.factory('FetchInterests',['$http','$q',function($http,$q){
                             mydata.leverColor = ""
                           }
               }
-            console.log(mydata)
             data.push(mydata)
           }
           deferred.resolve(data)
@@ -211,7 +209,6 @@ app.factory('GetFacebookFriends',['$http','$q',function($http,$q){
     GetFriends : function(){
       var deferred = $q.defer()
       var access_token = Parse.User.current().get('authData')['facebook']["access_token"]
-      console.log(access_token);
       if(access_token != null)
       {
       $http.get('https://graph.facebook.com/me/friends?access_token=' + access_token).then(function(response){
@@ -237,10 +234,9 @@ app.factory('GetFacebookFriends',['$http','$q',function($http,$q){
               for(var i=0;i<FriendObjects.length;i++)
               {
                 var singleFriend = FriendObjects[i];
-                console.log(singleFriend.id);
+
                 if(objectIds.indexOf(singleFriend.id) > -1)
                 {
-                  console.log("yahh");
                   var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:true}
                   Data.push(mydict)
                 }
@@ -271,45 +267,76 @@ app.factory('GetFacebookFriends',['$http','$q',function($http,$q){
 app.factory('GetFriendsFromInterests',['$http','$q',function($http,$q){
   return{
     GetFriends : function(){
+      var deferred = $q.defer()
+      var Data = []
+
+      console.log("hear");
       $http.get('/GetUserInterests').then(function(response) {
         var Interests = response.data.result
         // Interests = Interests.split(',')
+        var whomIamFollowing = []
         var Query = new Parse.Query('UserIntrest');
         Query.containedIn('IntrestText',Interests)
         Query.find({
           success:function(Objects){
             var FobjectIds = []
-            for(var o in Objects)
-            {
-              console.log(Objects[o]);
-              var user = Objects[o].get("User")
-              user.fetch()
-              FobjectIds.push(user.id)
-            }
-            console.log(FobjectIds);
             var Query = new Parse.Query("FollowList")
             Query.equalTo("Follower",Parse.User.current())
             Query.find({success:function(Objects){
               var objectIds = []
               for(var j=0;j<Objects.length;j++)
               {
-                if(FobjectIds.indexOf(singleFriend.id) > -1)
-                {
-                  console.log("yahh");
-                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:true}
-                  Data.push(mydict)
-                }
-                else {
-                  var mydict = {Name:singleFriend.get("Name"),objectId:singleFriend.id,Picture:singleFriend.get("ProfilePicture").url(),isFollowing:false}
-                  Data.push(mydict)
-                }
+                  whomIamFollowing.push(Objects[j].get('Following').id)
               }
-          },
-          error : function(error){console.log(error);}
-        })
-      }
+              },
+              error : function(error){console.log(error);deferred.reject(error)}
+              });
+                for(var o in Objects)
+                {
+                var user = Objects[o].get("User")
+                var singleFriend = Objects[o]
+                if(user.id != Parse.User.current().id)
+                {
+                user.fetch().then(function(user){
+                      if(user.id == whomIamFollowing.id)
+                      {
+                        var mydict = {Name:user.get("Name"),objectId:user.id,Picture:user.get("ProfilePicture").url(),isFollowing:true,symbol:"remove"}
+                        Data.push(mydict)
+                      }
+                      else
+                      {
+                        var mydict = {Name:user.get("Name"),objectId:user.id,Picture:user.get("ProfilePicture").url(),isFollowing:false,symbol:"add"}
+                        Data.push(mydict)
+                      }
+                      Data = _.map(_.groupBy(Data,function(doc){
+                        return doc.objectId;
+                      }),function(grouped){
+                        return grouped[0];
+                      });
+
+
+                      // console.log(Data);
+                      deferred.notify(Data)
+                      })
+              }
+               }
+            }
     })
   })
+  return deferred.promise;
 }
 }
 }])
+function removeDuplicates(Data)
+{
+var arr = new Array();
+for ( var i=0, len=Data.length; i < len; i++ )
+{
+    arr[Data[i]] = Data[i];
+}
+Data = new Array();
+for ( var key in arr ){
+    Data.push(arr[key]);
+ }
+return Data
+}

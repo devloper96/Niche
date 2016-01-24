@@ -20,7 +20,7 @@
       <script type="text/javascript" src="js/SettingsController.js"></script>
       <script type="text/javascript" src="js/controllers.js"></script>
       <script type="text/javascript" src="js/factory.js"></script>
-
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
       <style>
 
@@ -149,25 +149,69 @@
         </div>
         <div class="col" style="margin-top: 7px;"><b style="margin-top: 30px;"><a>{a f.Name a}</a></b></div>
         <div class="col" style="float: right;">
-         <a class="btn-floating btn-small waves-effect waves-light red" style="padding-bottom:2px"><i class="material-icons">{a f.symbol a}</i></a>
+         <a class="btn-floating btn-small waves-effect waves-light red" ng-click="FollowUnfollowAction(f)" style="padding-bottom:2px"><i class="material-icons">{a f.symbol a}</i></a>
         </div>
       </div>
     </li>
 </ul>
   <ul id="Punchit">
-  <li class="collection-item">
-    <div>
-      <div class="col" style="float: left;">
-      <img src="http://files.parsetfss.com/b7dd35dc-b01c-4492-b846-ef2a47bafc6b/tfss-f87eef16-6123-499e-abdc-386ba94d4f40-me.jpeg" class="profile-img" style="height:inherit;width:40px;padding">
+    <li class="collection-item" ng-repeat="f in intrestBasedFriends">
+      <div class="row">
+        <div class="col" style="float: left;">
+        <img src="{a f.Picture a}" class="profile-img" style="height:40px;width:40px;padding"/>
+        </div>
+        <div class="col" style="margin-top: 7px;"><b style="margin-top: 30px;"><a>{a f.Name a}</a></b></div>
+        <div class="col" style="float: right;">
+         <a class="btn-floating btn-small waves-effect waves-light red" ng-click="FollowUnfollowAction(f)" style="padding-bottom:2px"><i class="material-icons">{a f.symbol a}</i></a>
+        </div>
       </div>
-      <div class="col" style="margin-top: 7px;"><b style="margin-top: 30px;"><a>Yash Chauhan</a></b></div>
-      <div class="col" style="float: right;">
-       <a class="btn-floating btn-small waves-effect waves-light red" style="padding-bottom:2px"><i class="material-icons">add</i></a>
-      </div>
-    </div>
-  </li>
+    </li>
   </ul>
   </ul>
+</div>
+<div class="card col s11 l4" style="margin-left:4%;">
+  <div class="row">
+    <h5>Edit Profile</h3>
+      <div class="row" ng-controller="EditProfileController">
+        <div class="col l12 m12 s8" style="margin-left:35%;">
+            <div class="file-field input-field">
+            <div class="">
+            <img src="{a image a}" id="Preview2" class="circle" style="height:150px; width:150px;" />
+            <input type="file" id="Image2" name="profilePic" id="profilePic" required>
+            </div>
+            </div>
+      </div>
+        <div col s12>
+          <input type="text" placeholder="Email" ng-model="Email" value="{a Email a}"/>
+        </div>
+          <div col s12>
+            <input type="text" placeholder="Ninja Name" ng-model="Ninja_name" value="{a Ninja_name a}"/>
+          </div>
+          <div col s12>
+            <input type="text" placeholder="Name" ng-model="Name" value="{a Name a}"/>
+          </div>
+          <div class="col s12">
+            <a class="waves-effect waves-light btn" style="background-color:#ff4545" ng-click="update()">Submit</a>
+          </div>
+        </div>
+
+  </div>
+  <div class="row"><hr/></div>
+  <div class="row" ng-controller="ChangePassword">
+    <h5>Change Password</h3>
+      <div class="row">
+        <div col s12>
+          <input type="Password" placeholder="Password" ng-model="Pass_main"/>
+        </div>
+          <div col s12>
+            <input type="Password" placeholder="Confirm Password" ng-model="Pass_con"/>
+          </div>
+        </div>
+        <div class="col s12">
+          <a class="waves-effect waves-light btn" style="background-color:#ff4545" ng-click="update()">Submit</a>
+        </div>
+  </div>
+
 </div>
 </div>
 
@@ -190,6 +234,24 @@ $(".button-collapse").sideNav();
     var NextButton = document.getElementById('Next')
     NextButton.style.display = 'None'
   }
+  function readURL(input) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                      $('#Preview2').attr('src', e.target.result);
+              }
+
+              reader.readAsDataURL(input.files[0]);
+          }
+      }
+        $(function(){
+          $('#Image2').change(function(){
+
+            readURL(this)
+          })
+
+        });
 </script>
 <script>
 $(document).ready(function(){

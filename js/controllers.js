@@ -54,20 +54,6 @@ app.controller('bodyCtrl',function($scope,$http,PostService,Model,Search) {
 		$scope.width="70%"
 	}
 
-	Parse.Cloud.run("GetFriendsDetail", {name:["Harshdeep Champaneri","Smit Thakkar"]},{
-		success : function(response)
-		{
-			for(var i=0;i<response.length;i++)
-			{
-				var singleUser = response[i];
-				console.log(singleUser.get("Ninja_name"))
-			}
-		},
-		error : function(error)
-		{
-			console.log("error" + error);
-		}
-	})
 	$scope.posts = new Array()
 	$scope.PostsVisibility = true
 	$scope.$watch(function(){return Model.Value},function(){
@@ -269,7 +255,9 @@ function uniq(a) {
 
 app.controller('DetailsController',function($scope,$http,Data) {
 
-	function detectmob() {
+
+
+function detectmob() {
 	 if( navigator.userAgent.match(/Android/i)
 	 || navigator.userAgent.match(/webOS/i)
 	 || navigator.userAgent.match(/iPhone/i)
@@ -348,6 +336,24 @@ app.controller('DetailsController',function($scope,$http,Data) {
 		CheckIfIamFollowing()
 		$scope.display = 'block'
 	}
+
+	// $("#ProfilePicture").load(function() {
+	// 	var img = document.getElementById('ProfilePicture')
+	// 	xi=new XMLHttpRequest();
+	// 	xi.open("GET",img.src,true);
+	// 	xi.send();
+	//
+	// xi.onreadystatechange=function() {
+	//   if(xi.readyState==4 && xi.status==200) {
+	//     img=new Image;
+	//     img.onload=function(){
+	//
+	//     }
+	//     img.src=xi.responseText;
+	//   }
+	// }
+	// })
+
 
 	$scope.isFollowing = "Please wait .."
 	GetFollowers()

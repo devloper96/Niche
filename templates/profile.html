@@ -26,7 +26,8 @@
 <script type="text/javascript" src="js/controllers.js"></script>
 <script type="text/javascript" src="js/factory.js"></script>
 <script src="https://www.parsecdn.com/js/parse-1.6.12.min.js"></script>
-
+<script src="js/quantize.js"></script>
+<script src="js/ColorThief.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.js"></script>-->
 	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">-->
@@ -225,12 +226,12 @@ $(document).ready(function(){
 	<div ng-controller="DetailsController">
 			<div style="position:relative;">
 
-					<img class="bg_foggy center" src="{a ProfilePicture a}" style="{a blur_img a} ;position:absolute;z-index:-1;"/>
+					<img class="bg_foggy center" id="foggy" src="{a ProfilePicture a}" style="{a blur_img a} ;position:absolute;z-index:-1;"/>
 
 	<div class="row" style="color:#fff">
 		<!--<div class="section card col s10 m10" style="width:90%;margin-left:7%; margin-top:50px;">-->
 			<center>
-				<img class="circle responsive-img" src="{a ProfilePicture a}" style="height:200px;width:200px;border:{a color a} solid 1px"/></br/>
+				<img class="circle responsive-img" id="ProfilePicture" src="{a ProfilePicture a}" style="height:200px;width:200px;border:{a color a} solid 1px"/></br/>
 				<span class="title">
 					<b style="color:{a color a};"><h3>{a Name a}</h3></b>
 				</span>
