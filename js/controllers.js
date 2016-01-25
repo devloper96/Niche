@@ -45,6 +45,15 @@ app.controller('bodyCtrl',function($scope,$http,PostService,Model,Search) {
 	    return false;
 	  }
 	}
+	var url = document.URL
+	if(url.indexOf("Posts")!=-1)
+	{
+		var objectId = url.split('/')[2];
+		var SinglePostPromise = PostService.GetSinglePost("8pzy70zCXr")
+		SinglePostPromise.then(function(Data){
+			$scope.SinglePost = Data[0]
+		})
+	}
 
 	if(detectmob())
 	{
@@ -67,10 +76,17 @@ app.controller('bodyCtrl',function($scope,$http,PostService,Model,Search) {
 		$scope.Posts = $scope.backup
 	}
 	},true)
-var spinner = document.getElementById('spinner')
-spinner.style.display = 'block'
-var LoadMore = document.getElementById('LoadMore')
-LoadMore.style.display = 'none'
+	try {
+		var spinner = document.getElementById('spinner')
+		spinner.style.display = 'block'
+		var LoadMore = document.getElementById('LoadMore')
+		LoadMore.style.display = 'none'
+
+	} catch (e) {
+
+	} finally {
+
+	}
 var promise = PostService.GetPosts([])
 promise.then(
 function(Data){
@@ -79,12 +95,18 @@ function(Data){
 	$scope.posts = Data
 	$scope.backup = $scope.posts
 	$scope.PostsVisibility = false;
-						 //spinner
-  var spinner = document.getElementById('spinner')
-	spinner.style.display = 'none'
-						 // LoadMore
-	var LoadMore = document.getElementById('LoadMore')
-	LoadMore.style.display = 'block'
+			try {
+				var spinner = document.getElementById('spinner')
+				spinner.style.display = 'none'
+									 // LoadMore
+				var LoadMore = document.getElementById('LoadMore')
+				LoadMore.style.display = 'block'
+			} catch (e) {
+				console.log(e);
+			} finally {
+
+			}			 //spinner
+
 })
 
 	$scope.openComment = function(index) {

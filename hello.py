@@ -148,6 +148,10 @@ def Select_Interests():
 def Settings():
 	return render_template('Settings.html')
 
+@app.route('/Posts')
+def Posts():
+    return render_template('Posts.html')
+
 
 port = int(os.environ.get('PORT', 5000))
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

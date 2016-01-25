@@ -58,7 +58,52 @@ app.factory('PostService',['$http','Time','$q',function ($http,Time,$q) {
     		})
     	})
       return deferred.promise;
-    }
+    },
+    GetSinglePost : function(objectId)
+    {
+     var deferred = $q.defer();
+     Parse.initialize("Y4Txek5e5lKnGzkArbcNMVKqMHyaTk3XR6COOpg4", "fR1P17QhE9b7PKOa1wXozi0yo8IAlYLSIzqYh4EU");
+       var posts = Parse.Object.extend("Posts")
+       var Query = new  Parse.Query(posts)
+       Query.equalTo("objectId","8pzy70zCXr")
+       Query.include("_User")
+       Query.descending("createdAt")
+       Query.limit(5);
+       Query.find({
+         success : function (data) {
+             if(data !=null && data != 'undefined')
+             {
+               for(var i=0;i<data.length;i++)
+               {
+                 var SinglePost = data[i];
+                 SinglePost.Image1Title = SinglePost.get("Image1Title")
+                 SinglePost.Image2Title = SinglePost.get("Image2Title")
+                 var user = SinglePost.get('By')
+                 user.fetch({
+                   success:function(myObject) {
+                   }
+                 });
+                 var createdAt = SinglePost.get('createdAt')
+                 var timeStamp = Time.GetTimeStamp(createdAt)
+                 SinglePost.set('TimeStamp',timeStamp);
+                 SinglePost.set("Votes1",SinglePost.get('Punchers1').length)
+                 SinglePost.set("Votes2",SinglePost.get('Punchers2').length)
+                 Posts.push(SinglePost)
+               }
+               deferred.resolve(Posts);
+             }
+             else
+             {
+                deferred.reject("No data found")
+             }
+         },
+         error : function (error) {
+           deferred.reject("Error occured : " + error)
+         }
+       })
+     return deferred.promise;
+   }
+
   }
 }])
 
