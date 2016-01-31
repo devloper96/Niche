@@ -148,8 +148,8 @@ def Select_Interests():
 def Settings():
 	return render_template('Settings.html')
 
-@app.route('/Posts')
-def Posts():
+@app.route('/Posts/<path:path>')
+def Posts(path):
     return render_template('Posts.html')
 
 
